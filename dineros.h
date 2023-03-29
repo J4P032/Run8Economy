@@ -30,6 +30,7 @@ struct gastoAlquiler {
 };
 
 
+
 double buscaPrecioAlquiler(int idLoco) {
     int idLocoXML = 0;
     double valorAlquiler = 0;

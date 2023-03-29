@@ -20,7 +20,7 @@ vector<pair<int, double>> dolaresRoad(1, make_pair(0, 0.0));
 vector<pair<int, double>> dolaresTrim(1, make_pair(0, 0.0));
 vector<pair<int, double>> dolaresHump(1, make_pair(0, 0.0));
 vector<pair<int, double>> dolaresLocal(1, make_pair(0, 0.0));
-extern vector<gastoAlquiler> LocomotorasAlquiladas;
+vector<gastoAlquiler> LocomotorasAlquiladas;
 int idLocoTrabajo = 0;
 bool vectorDolaresTrim = false;
 bool vectorDolaresLocal = false;
@@ -228,6 +228,7 @@ void writeEconomyRun(char idioma, double totalHours, double totalMiles, double t
         gananciaTotalHoyHump += dolaresHump[i].second;
     }
     gananciaTotalHoy = gananciaTotalHoyRoad + gananciaTotalHoyTrim + gananciaTotalHoyLocal + gananciaTotalHoyHump;
+
 
     meterLocomotorasAlquiladas(LocomotorasAlquiladas);
 

@@ -25,7 +25,7 @@
 
 using namespace std;
 
-vector<gastoAlquiler> LocomotorasAlquiladas;
+
 
 
 int main() {
@@ -40,7 +40,6 @@ int main() {
     int tiempoCrono = 0; //milisegundos
     std::vector<LocomotoraTrabajo> locosTrabajo(1, { 0,"N", 0, 0, 0.0, 0.0 }); //tengo que inicializarlo o si no hará una excepción de memoria.
     vector<pair<int, double>> distRunLocoVector(1, make_pair(0, 0.0));
-
     double distRunLocoActiva = 0.0;
     bool distRunLocoVectorEncontrado = false;
 
@@ -60,8 +59,6 @@ int main() {
     int LnumVagAuxTrim = 0;
     bool llaveLocal = false;
     bool llaveTrim2 = false;
-    //vector<string> idsVagones;
-    //vector<pair<int, string>> idsVagones;
     vector<cargaVagones> idsVagones;
     double pesoAuxLocal = 0.0;
     double pesoTotalTrim = 0.0;
@@ -150,6 +147,7 @@ int main() {
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        
         //Auto Save Train.xml
         xmlString = leeXML("./V3Routes/Regions/SouthernCA/AutoSaves/Auto Save Train.xml");
 
