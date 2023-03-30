@@ -155,6 +155,10 @@ void totalMillasMotor(string mercadoXML, char idioma) {
     int millasHechas = 0;
     int numUnitNotes = 0;
 
+    int totalChars = mercadoXML.length();
+    int charsProcesados = 0;
+    float porcentajeCompleto = 0.0;
+
     ofstream outfile("./V3RailVehicles/UnitNotesDatabase.xml"); // Abrir el archivo antes del ciclo while
     outfile << "<?xml version=\"1.0\"?>" << endl;
     outfile << "<ArrayOfUnitNote xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" << endl;
@@ -174,6 +178,15 @@ void totalMillasMotor(string mercadoXML, char idioma) {
 
         writeUnitNotesDatabase(outfile, cadena, millasHechas, idioma);
         numUnitNotes++; //incrementa el valor para decirle cuando debe cerrar el archivo
+    
+    //Actualizar el procentaje completado y mostrarlo en pantalla cada 5.0%
+        charsProcesados += endTagPos - startTagPos;
+        float nuevoPorcentaje = (float)charsProcesados / (float)totalChars * 100;
+        if (nuevoPorcentaje - porcentajeCompleto > 5.0) {
+            porcentajeCompleto = nuevoPorcentaje;
+            cout << "progreso: " << porcentajeCompleto << "%" << endl;
+        }
+    
     }
 
     if (numUnitNotes > 0) {

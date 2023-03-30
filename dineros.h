@@ -6,7 +6,7 @@
 #include "getTotalValues.h"
 #include "copiaArchivoTexto.h"
 #include "mercado.h"
-#include "writeEconomiaRun8TXT.h"
+//#include "writeEconomiaRun8TXT.h"
 
 
 
@@ -26,14 +26,14 @@ struct dinerosPorCurro {
 
 struct gastoAlquiler {
     int idLocoAlquiler;
-    double precioRenting;
+    int precioRenting;
 };
 
 
 
-double buscaPrecioAlquiler(int idLoco) {
+int buscaPrecioAlquiler(char idioma, int idLoco) {
     int idLocoXML = 0;
-    double valorAlquiler = 0;
+    int valorAlquiler = 0;
     int startTagPos = 0;
     int endTagPos = 0;
     string notesXML = leeXML("./V3RailVehicles/UnitNotesDatabase.xml");
@@ -43,9 +43,16 @@ double buscaPrecioAlquiler(int idLoco) {
         string cadena = notesXML.substr(startTagPos, endTagPos - startTagPos);
         idLocoXML = convertirANumero(cadena);
         if (idLocoXML == idLoco) {
-            startTagPos = notesXML.find("Hour: $", endTagPos);
-            startTagPos += sizeof("Hour: $") - 1;
-            endTagPos = notesXML.find("</noteText>", startTagPos);
+            if (idioma == 's') {
+                startTagPos = notesXML.find("Hora: $", endTagPos);
+                startTagPos += sizeof("Hora: $") - 1;
+                endTagPos = notesXML.find("</noteText>", startTagPos);
+            }
+            if (idioma == 'e') {
+                startTagPos = notesXML.find("Hour: $", endTagPos);
+                startTagPos += sizeof("Hour: $") - 1;
+                endTagPos = notesXML.find("</noteText>", startTagPos);
+            }
             string cadena = notesXML.substr(startTagPos, endTagPos - startTagPos);
             stringstream valorAlquilerXML(notesXML.substr(startTagPos, endTagPos - startTagPos)); 
             valorAlquilerXML >> valorAlquiler;
@@ -61,12 +68,12 @@ double buscaPrecioAlquiler(int idLoco) {
 
 
 
-void meterLocomotorasAlquiladas(vector<gastoAlquiler>& LocomotorasAlquiladas) {
+void meterLocomotorasAlquiladas(string xmlString3, char idioma, vector<gastoAlquiler>& LocomotorasAlquiladas) {
     int startTagPos = 0;
     int endTagPos = 0;
     int indiceID = 0;
     bool encontrado = false;
-    string xmlString3 = leeXML("./V3Routes/Regions/SouthernCA/AutoSaves/Auto Save Train.xml");
+    //string xmlString3 = leeXML("./V3Routes/Regions/SouthernCA/AutoSaves/Auto Save Train.xml");
     while ((startTagPos = xmlString3.find("<unitType>", endTagPos)) != string::npos) {
         startTagPos += sizeof("<unitType>") - 1;
         endTagPos = xmlString3.find("</unitType>", startTagPos);
@@ -77,23 +84,22 @@ void meterLocomotorasAlquiladas(vector<gastoAlquiler>& LocomotorasAlquiladas) {
             endTagPos = xmlString3.find("</unitNumber>", startTagPos);
             stringstream xmlValorID(xmlString3.substr(startTagPos, endTagPos - startTagPos));
             xmlValorID >> indiceID;
-            for (auto& loco : LocomotorasAlquiladas) { //nos recorremos el vector
+
+            // Buscar si ya existe una locomotora con el id
+            for (auto& loco : LocomotorasAlquiladas) {
                 if (loco.idLocoAlquiler == indiceID) {
                     encontrado = true;
                     break;
                 }
-                if (!encontrado) {
-                    gastoAlquiler loco1 = { indiceID, buscaPrecioAlquiler(indiceID) };
-                    LocomotorasAlquiladas.emplace_back(loco1);
-                }
             }
+            if (!encontrado) {
+                gastoAlquiler loco1 = { indiceID, buscaPrecioAlquiler(idioma, indiceID) };
+                LocomotorasAlquiladas.emplace_back(loco1);
+            }
+            
         }
         else { continue; }
     }
-   /* gastoAlquiler valorAlquiler;
-    valorAlquiler.idLocoAlquiler = indiceID;
-    valorAlquiler.precioRenting = buscaPrecioAlquiler(indiceID);
-    return valorAlquiler;*/
 }
 
 

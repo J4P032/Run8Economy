@@ -230,25 +230,36 @@ void writeEconomyRun(char idioma, double totalHours, double totalMiles, double t
     gananciaTotalHoy = gananciaTotalHoyRoad + gananciaTotalHoyTrim + gananciaTotalHoyLocal + gananciaTotalHoyHump;
 
 
-    meterLocomotorasAlquiladas(LocomotorasAlquiladas);
+  //calculo del alquiler mirando en el vector LocomotorasAlquiladas con el precio de UnitNotesDatabase.xml
+    double alquilerTotal = 0;
+    for (size_t i = 0; i < LocomotorasAlquiladas.size(); i++) {
+        alquilerTotal += LocomotorasAlquiladas[i].precioRenting;
+    }
+    alquilerTotal = alquilerTotal * hHoras;
+    double dineroInOut = 0.0;
+    dineroInOut = ((hHoras * 100) + gananciaTotalHoy) - alquilerTotal - (SacarValorTrabajado(totalGallons, Galon) * 3.92); //3.92$/gal en 2013 en USA chatGPT dixit
+
 
     if (idioma == 's') {
         output << endl;
         output << "FINANZAS($)" << endl;
         output << "-----------" << endl;
-        output << "Banco: " << fixed << setprecision(2) << initialBanco + (hHoras * 100) + gananciaTotalHoy << endl;
+        output << "Banco: " << fixed << setprecision(2) << initialBanco + dineroInOut << endl;
         output << "Ingresos Hoy: " << fixed << setprecision(2) << (hHoras * 100) + gananciaTotalHoy << endl;
-        output << "gastos de alquiler hoy: " << endl;
-        output << "vector alquiler size: " << LocomotorasAlquiladas.size() << endl;
-       // output << LocomotorasAlquiladas[0].idLocoAlquiler << " : " << LocomotorasAlquiladas[0].precioRenting << endl;
+        output << "Gastos de alquiler hoy: " << LocomotorasAlquiladas.size() << " locomotoras alquiladas por " << fixed << setprecision(2) << hHoras << " horas = $" << alquilerTotal << endl;
+        output << "Gastos de combustible : " << SacarValorTrabajado(totalGallons, Galon) << " galones por 3.92$/gal = $" << SacarValorTrabajado(totalGallons, Galon) * 3.92 << endl;
+        output << "Total hoy: $" << dineroInOut << endl;
         output.close();
     }
     if (idioma == 'e') {
         output << endl;
         output << "MONEY($)" << endl;
         output << "--------" << endl;
-        output << "Bank: " << fixed << setprecision(2) << initialBanco + (hHoras * 100) + gananciaTotalHoy << endl;
-        output << "Today income: " << fixed << setprecision(2) << (hHoras * 100) + gananciaTotalHoy << endl;
+        output << "Bank: " << fixed << setprecision(2) << initialBanco + dineroInOut << endl;
+        output << "Today's income: " << fixed << setprecision(2) << (hHoras * 100) + gananciaTotalHoy << endl;
+        output << "Today's renting expenses: " << LocomotorasAlquiladas.size() << " rented locomotives for " << fixed << setprecision(2) << hHoras << " hours = $" << alquilerTotal << endl;
+        output << "Today's Fuel expenses : " << SacarValorTrabajado(totalGallons, Galon) << " gallons per 3.92$/gal = $" << SacarValorTrabajado(totalGallons, Galon) * 3.92 << endl;
+        output << "Today's Total: $" << dineroInOut << endl;
         output.close();
     }
 }

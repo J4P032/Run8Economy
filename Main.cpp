@@ -68,7 +68,7 @@ int main() {
     bool idiomaOk = false;
     bool mercadoOK = false;
     char mercado = '0';
-
+   
     //Preguntamos el idioma del programa
     while (!idiomaOk) {
         cout << "(E)nglish or (S)panish ?";
@@ -194,6 +194,14 @@ int main() {
             miLocomotora.numLocos = 0;
         }
 
+        //Alquiler locomotoras. Meterlos en el vector suyo para luego hacer el cálculo final de costo.
+        //solo se meten los archivos recientes para no meter antiguos de otras partidas Y solo el último del vector distancia con distancia mayor a 0, para no alquilar los que simplemente veamos
+        
+        if ((hora_actual - hora_archivo) > 1) { //el puñetero te puede pillar una loco sin millas por que no cambia el vectorMillas rápido. Por eso le hago esperar un minuto antes de entrar a la condición
+            if (((hora_actual - hora_archivo) < 3) && (distRunLocoVector[(distRunLocoVector.size() - 1)].second > 0.0)) {
+                meterLocomotorasAlquiladas(xmlString, idioma, LocomotorasAlquiladas); //dineros.h
+            }
+        }
         LocomotoraTrabajo resultadoLocomotoras;
 
 
